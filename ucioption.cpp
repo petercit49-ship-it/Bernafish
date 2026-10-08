@@ -80,9 +80,8 @@ void init(OptionsMap& o) {
   o["Bishop Pin"]                   = Option(100, 0, 200, on_eval);
   o["Minor Behind Pawn"]            = Option(100, 0, 200, on_eval);
   o["Undefended Minors"]            = Option(100, 0, 200, on_eval);
-  o["Pawn Attacks Pieces"]          = Option(100, 0, 200, on_eval);
+  o["Pawn Attacks Pieces"]          = Option(100, 50, 150, on_eval);
   o["King Attackers"]               = Option(100, 0, 200, on_eval);
-  o["King Safe Checks"]             = Option(100, 0, 200, on_eval);
   o["Doubled Pawns"]               = Option(100, 0, 200, on_eval);
   o["Isolated Pawns"]              = Option(100, 0, 200, on_eval);
   o["Backward Pawns"]              = Option(100, 0, 200, on_eval);

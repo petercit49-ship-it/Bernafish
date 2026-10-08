@@ -181,7 +181,7 @@ namespace {
   Score BishopPin, RookOn7th, RookOnPawn, RookOpenFile, BishopPawns, MinorBehindPawn,
         UndefendedMinor, TrappedRook, RookSemiopenFile;
   Score ThreatenedByPawn[6];
-  int KnightOutpostPct = 100, BishopOutpostPct = 100, KingAttackersPct = 100, KingSafeChecksPct = 100;
+  int KnightOutpostPct = 100, BishopOutpostPct = 100, KingAttackersPct = 100;
 
   const Score TrappedRookBase      = make_score(90,  0);
 
@@ -317,7 +317,6 @@ namespace Eval {
     KnightOutpostPct  = Options["Knight Outpost"];
     BishopOutpostPct  = Options["Bishop Outpost"];
     KingAttackersPct  = Options["King Attackers"];
-    KingSafeChecksPct = Options["King Safe Checks"];
 
     const int MaxSlope = 30;
     const int Peak = 1280;
@@ -879,7 +878,6 @@ Value do_evaluate(const Position& pos, Value& margin) {
                      + KingExposed[relative_square(Us, ksq)]
                      - mg_value(score) / 32;
 
-        const int baseUnits = attackUnits; // Bernafish: checks below are scaled by 'King Safe Checks'
 
         // Analyse enemy's safe queen contact checks. First find undefended
         // squares around the king attacked by enemy queen...
@@ -939,7 +937,6 @@ Value do_evaluate(const Position& pos, Value& margin) {
         if (b)
             attackUnits += KnightCheck * popcount<Max15>(b);
 
-        attackUnits = baseUnits + (attackUnits - baseUnits) * KingSafeChecksPct / 100;
 
         // To index KingDanger[] attackUnits must be in [0, 99] range
         attackUnits = std::min(99, std::max(0, attackUnits));
