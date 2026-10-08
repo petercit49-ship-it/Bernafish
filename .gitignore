@@ -1,0 +1,7 @@
+*.o
+*.exe
+*.bak
+*.bak[0-9]
+.depend
+compilacion.log
+*.bexp
