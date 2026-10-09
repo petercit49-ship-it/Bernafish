@@ -1,70 +1,165 @@
-### Overview
+# Bernafish 1.0
 
-Stockfish is a free UCI chess engine derived from Glaurung 2.1. It is
-not a complete chess program and requires some UCI-compatible GUI
-(e.g. XBoard with PolyGlot, eboard, Arena, Sigma Chess, Shredder, Chess
-Partner or Fritz) in order to be used comfortably. Read the
-documentation for your GUI of choice for information about how to use
-Stockfish with it.
+**Autor:** MF Pedro Bernabé Moreno Maura  
+**Basado en:** Stockfish 4 (por Tord Romstad, Marco Costalba y Joona Kiiski)  
+**Licencia:** GPLv3 (ver `Copying.txt`)  
+**Estado:** Versión estable 1.0
 
-This version of Stockfish supports up to 64 CPUs. The engine defaults
-to one search thread it is therefore recommended to inspect the value of
-the *Threads* UCI parameter, and to make sure it equals the number of CPU
-cores on your computer.
+---
 
+## ¿Qué es Bernafish?
 
-### Files
+**Bernafish** es un motor de ajedrez humanizado derivado de Stockfish 4. Su objetivo no es ser el motor más fuerte, sino el más **configurable**: permite crear personalidades de juego completas (estilo, Elo objetivo, errores humanos, agresividad, preferencias posicionales, etc.) mediante un archivo INI externo.
 
-This distribution of Stockfish consists of the following files:
+Está diseñado para ser usado desde:
+- **Ajedrez Evolutivo**, una plataforma de entrenamiento integral en Python.
+- **Cualquier GUI UCI** (ChessBase, Arena, CuteChess, Fritz, BanksiaGUI, etc.).
+- **Modo consola**, sin GUI, para automatización.
 
-  * Readme.md, the file you are currently reading.
+---
 
-  * Copying.txt, a text file containing the GNU General Public License.
+## Características principales
 
-  * src, a subdirectory containing the full source code, including a Makefile
-    that can be used to compile Stockfish on Unix-like systems. For further
-    information about how to compile Stockfish yourself read section below.
+### Sistema de personalidades (INI)
 
-  * polyglot.ini, for using Stockfish with Fabien Letouzey's PolyGlot
-    adapter.
+Bernafish lee personalidades desde un archivo INI (por defecto `personalities.ini`). Cada personalidad es una sección con más de 50 parámetros:
 
+```ini
+[Personalidad: Kasparov]
+descripcion = ELO 2750 — Táctico. Dinamismo e iniciativa.
+etiquetas_estilo = dinámico, ataque, iniciativa
+elo_objetivo = 2750
+limite_fuerza_motor = 2100
+limite_profundidad = 99
+valor_peon_mg = 100
+valor_peon_eg = 100
+...
+ataque_rey = 200
+tormenta_peones = 180
+...
+escala_inexactitudes = 10
+escala_errores = 0
 
-### Opening books
+Parámetros configurables (extracto)
+Grupo	Ejemplos
+Valores de piezas (MG/EG)	valor_peon_mg, valor_dama_eg, etc.
+Posicionales	estructura_peones, cadena_peones, outpost, valor_espacio
+Tácticos	ataque_rey, tormenta_peones, bonus_presion_piezas
+Intercambio	contempt_dinamico, bonus_par_alfiles, torre_septima_fila
+Movilidad y seguridad	movilidad, seguridad_rey
+Preferencias de piezas	preferencia_dama, preferencia_torre, etc.
+Estilo dinámico	optimismo_dinamico, factor_especulacion
+Humanización	escala_inexactitudes, escala_errores, aprendizaje_activado
+Fuerza	elo_objetivo, limite_fuerza_motor, limite_profundidad
 
-This version of Stockfish has support for PolyGlot opening books. For
-information about how to create such books, consult the PolyGlot
-documentation. The book file can be selected by setting the *Book File*
-UCI parameter.
+Humanización
+Imprecisiones controladas: el motor puede cometer errores pequeños de forma intencional.
 
+Errores graves ajustables: simula el comportamiento de jugadores humanos de distintos niveles.
 
-### Compiling it yourself
+Escala de errores: de 0 (juego perfecto) a 100 (muy humano).
 
-On Unix-like systems, it should be possible to compile Stockfish
-directly from the source code with the included Makefile.
+Profundidad limitada: simula jugadores que no calculan hasta el final.
 
-Stockfish has support for 32 or 64-bit CPUs, the hardware POPCNT
-instruction, big-endian machines such as Power PC, and other platforms.
+Sistema de experiencia
+Libro de aperturas personal por personalidad.
 
-In general it is recommended to run `make help` to see a list of make
-targets with corresponding descriptions. When not using Makefile to
-compile (for instance with Microsoft MSVC) you need to manually
-set/unset some switches in the compiler command line; see file *types.h*
-for a quick reference.
+Aprendizaje adaptativo (opcional).
 
+Estadísticas por partida (victorias, tablas, derrotas).
 
-### Terms of use
+Formato .exp compatible con la plataforma Ajedrez Evolutivo.
 
-Stockfish is free, and distributed under the **GNU General Public License**
-(GPL). Essentially, this means that you are free to do almost exactly
-what you want with the program, including distributing it among your
-friends, making it available for download from your web site, selling
-it (either by itself or as part of some bigger software package), or
-using it as the starting point for a software project of your own.
+Elo objetivo
+Cada personalidad puede apuntar a un Elo concreto (de 900 a 2900). El motor ajusta automáticamente la profundidad y los errores para acercarse a ese nivel.
 
-The only real limitation is that whenever you distribute Stockfish in
-some way, you must always include the full source code, or a pointer
-to where the source code can be found. If you make any changes to the
-source code, these changes must also be made available under the GPL.
+¿Qué versión descargar?
+Consulta la sección Releases del repositorio. Se publican binarios para distintas CPUs.
 
-For full details, read the copy of the GPL found in the file named
-*Copying.txt*
+CPU	Recomendación
+Intel 2013+ / AMD 2015+	bernafish-x86-64-modern
+Muy antigua o desconocida	bernafish-x86-64
+Instalación
+Descarga el binario desde la sección Releases.
+
+Colócalo en la carpeta que prefieras.
+
+(Opcional) Coloca el archivo personalities.ini en la misma carpeta.
+
+Ábrelo desde tu GUI de ajedrez como motor UCI.
+
+Requisito en Windows: el archivo libwinpthread-1.dll debe estar junto al .exe.
+
+Uso
+Desde una GUI UCI (ChessBase, Arena, etc.)
+Añade el motor como UCI.
+
+Configura las opciones que necesites (Elo, personalidad, etc.).
+
+Juega o analiza.
+
+Desde la consola
+bash
+./bernafish
+uci
+setoption name Skill Level value 10
+position startpos
+go depth 15
+quit
+Desde Ajedrez Evolutivo (Python)
+La plataforma carga el INI y traduce las claves al motor. Ver la documentación de Ajedrez Evolutivo para más detalles.
+
+Compilación
+bash
+make build ARCH=x86-64-modern COMP=mingw
+Para builds optimizadas con PGO:
+
+bash
+make profile-build ARCH=x86-64-modern COMP=mingw
+Consulta make help para ver todas las opciones.
+
+Opciones UCI principales
+Bernafish expone más de 90 opciones UCI. Las principales:
+
+Opción	Tipo	Descripción
+Book File	string	Archivo de libro PolyGlot
+OwnBook	check	Usar libro propio
+Skill Level	spin 0-20	Fuerza general del motor
+Elo	spin 800-2900	Elo objetivo (humanización)
+Imprecision	spin 0-100	Nivel de imprecisiones humanas
+Blunder Rate	spin 0-100	Tasa de errores graves
+Depth Limit	spin 0-40	Profundidad máxima
+Aggressiveness	spin 0-200	Agresividad general
+Cowardice	spin 0-200	Tendencia defensiva
+Experience File	string	Archivo .exp de aprendizaje
+Experience Learning	check	Activar aprendizaje
+Experience Use	spin 0-100	Porcentaje de uso del libro
+Para la lista completa: envía uci al motor y revisa la salida.
+
+Estructura del proyecto
+text
+Bernafish/
+├── Copying.txt              # Licencia GPLv3
+├── Readme.md                # Este archivo
+├── CHANGELOG.md             # Historial de cambios
+├── Makefile                 # Sistema de compilación
+├── personalities.ini        # Personalidades por defecto (ejemplo)
+├── src/                     # Código fuente
+│   ├── *.cpp, *.h           # Núcleo del motor
+│   ├── material.cpp/.h      # Personalización de material (Bernafish)
+│   ├── pawns.cpp/.h         # Personalización de peones (Bernafish)
+│   ├── experience.cpp/.h    # Sistema de experiencia (Bernafish)
+│   └── misc.cpp             # Banner UCI personalizado
+└── scripts/                 # Scripts auxiliares
+Créditos
+Bernafish 1.0 — MF Pedro Bernabé Moreno Maura
+
+Stockfish 4 — Tord Romstad, Marco Costalba, Joona Kiiski
+
+Comunidad Stockfish — por mantener vivo el proyecto original
+
+Licencia
+Este proyecto se distribuye bajo la GNU General Public License v3.
+Ver Copying.txt para el texto completo.
+
+Cualquier modificación o redistribución debe mantener la misma licencia y hacer disponible el código fuente.

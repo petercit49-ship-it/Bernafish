@@ -5,3 +5,11 @@
 .depend
 compilacion.log
 *.bexp
+*.bak
+*.bak2
+*.bak3
+*.bak4
+*.bak5
+*.bak6
+*.bak*
+*.dll
