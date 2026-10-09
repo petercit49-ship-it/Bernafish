@@ -1,15 +1,20 @@
+# Binarios compilados
 *.o
 *.exe
+*.dll
+
+# Backups
 *.bak
 *.bak[0-9]
+*.bak*
+
+# Archivos del sistema de compilación
 .depend
 compilacion.log
+
+# Archivos de experiencia (cada usuario tiene el suyo)
+*.exp
 *.bexp
-*.bak
-*.bak2
-*.bak3
-*.bak4
-*.bak5
-*.bak6
-*.bak*
-*.dll
+
+# Backups de personalidades
+personalities.ini.bak
